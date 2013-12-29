@@ -1,0 +1,16 @@
+{
+  "name":"fooman/common",
+  "type":"magento-module",
+  "license":"OSL-3.0",
+  "homepage":"https://github.com/fooman/common",
+  "description":"Extension for Fooman common code.",
+  "authors":[
+    {
+      "name":"Kristof Ringleff",
+      "email":"kristof@fooman.co.nz"
+    }
+  ],
+  "require":{
+    "magento-hackathon/magento-composer-installer":"*"
+  }
+}
