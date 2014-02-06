@@ -46,11 +46,10 @@ class Fooman_Common_Model_Selftester_Abstract extends Mage_Core_Model_Abstract
                     );
                 }
                 if (get_class($model) != $currentRow[2]) {
-                    throw new Exception(
+                    $this->messages[] =
                         'Trying to load class ' . $currentRow[2] . ' returns correct instance but unexpected class '
-                        . get_class($model). '. Please refresh your Magento configuration cache and check
-                    if you have any conflicting extensions installed.'
-                    );
+                        . get_class($model). '. This can be a likely cause of issues and will need to be investigated
+                          on a case by case basis if the other extension cannot be uninstalled.';
                 }
                 break;
             case 'block':
@@ -63,11 +62,10 @@ class Fooman_Common_Model_Selftester_Abstract extends Mage_Core_Model_Abstract
                     );
                 }
                 if (get_class($block) != $currentRow[2]) {
-                    throw new Exception(
+                    $this->messages[] =
                         'Trying to load block ' . $currentRow[2] . ' returns correct instance but unexpected class '
-                        . get_class($block). '. Please refresh your Magento configuration cache and check
-                    if you have any conflicting extensions installed.'
-                    );
+                        . get_class($block). '. This can be a likely cause of issues and will need to be investigated
+                        on a case by case basis if the other extension cannot be uninstalled.';
                 }
                 break;
         }
