@@ -49,7 +49,7 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
                 $selftester->messages[]
                     = "<p>The selftest has found some problems with your database install.
                     You can attempt to fix this by clicking this <a href=\""
-                    . htmlentities(Mage::helper('core/http')->getServer('PHP_SELF', ''))
+                    . htmlentities(Mage::app()->getRequest()->getServer('PHP_SELF', ''))
                     . "?fix=true\">link</a>.</p><p style=\"color:red;\"><em>A DATABASE BACKUP IS strongly
                     RECOMMENDED BEFORE ATTEMPTING THIS!</em></p>";
             }
@@ -113,7 +113,7 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
     {
         try {
             if (!$installer->getConnection()->tableColumnExists($field[1], $field[2])) {
-                throw new Exception(sprintf('Did not find column %s in table %s'), $field[2], $field[1]);
+                throw new Exception(sprintf('Did not find column %s in table %s', $field[2], $field[1]));
             }
             $selftester->messages[] = "[OK] column " . $field[2]."";
         } catch (Exception $e) {
