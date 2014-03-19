@@ -112,8 +112,10 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
     protected function _dbCheckSqlColumn(Fooman_Common_Model_Selftester $selftester, $field, $installer, $localError)
     {
         try {
-            if (!$installer->getConnection()->tableColumnExists($field[1], $field[2])) {
-                throw new Exception(sprintf('Did not find column %s in table %s', $field[2], $field[1]));
+            if (!$installer->getConnection()->tableColumnExists($installer->getTable($field[1]), $field[2])) {
+                throw new Exception(
+                    sprintf('Did not find column %s in table %s', $field[2], $installer->getTable($field[1]))
+                );
             }
             $selftester->messages[] = "[OK] column " . $field[2]."";
         } catch (Exception $e) {
