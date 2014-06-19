@@ -30,6 +30,10 @@
             [
                 "/app/etc/modules/Fooman_Common.xml",
                 "/app/etc/modules/Fooman_Common.xml"
+            ],
+            [
+                "/app/locale/en_US/Fooman_Common.csv",
+                "/app/locale/en_US/Fooman_Common.csv"
             ]
         ]
     }
