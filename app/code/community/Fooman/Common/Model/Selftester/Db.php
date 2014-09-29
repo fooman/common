@@ -177,26 +177,15 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
             $selftester->messages[] = "[OK] Table " . $fields[1]."";
         } catch (Exception $e) {
             if ($selftester->shouldFix()) {
-                $selftester->messages[] = "Attempting fix for table " . $fields[1]."";
-
-                $keys = array();
-                $columns = array();
+                $table = $installer->getConnection() ->newTable($installer->getTable($fields[1]));
 
                 foreach ($fields[2] as $item) {
-                    switch ($item[0]) {
-                        case 'sql-column':
-                            $columns[] = '`'.$item[1].'` '.$item[2];
-                            break;
-                        case 'key':
-                            $keys[] = $item[1] .' (`'.$item[2].'`)';
-                            break;
-                    }
+                    $table->addColumn($item[0], $item[1], $item[2], $item[3], $item[4]);
+
                 }
-                $tableDetails = implode(",", array_merge($columns, $keys));
-                $sql ="CREATE TABLE `{$installer->getTable( $fields[1])}` ("
-                    .$tableDetails.") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
                 try {
-                    $installer->run($sql);
+                    $selftester->messages[] = "Attempting fix for table " . $fields[1]."";
+                    $installer->getConnection()->createTable($table);
                     $selftester->messages[] = "[FIX OK] table " . $fields[1]." fixed";
                 } catch (Exception $e) {
                     $selftester->messages[] = "[FAILED] fixing table " . $fields[1]."";
@@ -275,13 +264,15 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
     protected function _dbCheckDbRow(Fooman_Common_Model_Selftester $selftester, $fields, $installer, $localError)
     {
         try {
-            $where = array();
+            $select = $installer->getConnection()->select()
+                ->from($installer->getTable($fields[1]));
+            $bind = array();
             foreach ($fields[2] as $key => $value) {
-                $where[] = "`" . $key . "`='" . $value . "'";
+                $bind[$key] = $value;
+                $select->where($installer->getConnection()->quoteIdentifier($key) . '= :' . $key);
             }
-            $sql ="SELECT * FROM `{$installer->getTable( $fields[1])}` WHERE ".implode(' AND ', $where).";";
 
-            $result = $installer->getConnection()->fetchOne($sql);
+            $result = $installer->getConnection()->fetchRow($select, $bind);
             if (!$result) {
                 throw new Exception(
                     sprintf('Did not find content in %s', $installer->getTable($fields[1]))
