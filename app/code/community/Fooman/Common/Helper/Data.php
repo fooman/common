@@ -8,9 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 class Fooman_Common_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    const NEW_MAGENTO_CSS_LOCATION = 'lib/prototype/windows/themes/magento.css';
+    const OLD_MAGENTO_CSS_LOCATION = 'prototype/windows/themes/magento.css';
+
     /**
      * Helper function to create a hash from a base64 Fooman serial number
      *
@@ -31,9 +33,9 @@ class Fooman_Common_Helper_Data extends Mage_Core_Helper_Abstract
     public function getOverlayFileName()
     {
         if (file_exists($this->_getNewOverlayFileLocation())) {
-            return 'lib/prototype/windows/themes/magento.css';
+            return self::NEW_MAGENTO_CSS_LOCATION;
         } else {
-            return 'prototype/windows/themes/magento.css';
+            return self::OLD_MAGENTO_CSS_LOCATION;
         }
     }
 
