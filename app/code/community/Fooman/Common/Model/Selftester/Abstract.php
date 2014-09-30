@@ -29,7 +29,7 @@ class Fooman_Common_Model_Selftester_Abstract extends Mage_Core_Model_Abstract
                 $model = Mage::getResourceModel($currentRow[1]);
                 if (get_class($model) != $currentRow[2]) {
                     throw new Exception(
-                        'Trying to load class ' . $currentRow[2] . 'returns ' . get_class($model)
+                        'Trying to load class ' . $currentRow[2] . ' returns ' . get_class($model)
                         . '. Please refresh your Magento configuration cache and check
                     if you have any conflicting extensions installed.'
                     );

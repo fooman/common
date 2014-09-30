@@ -32,8 +32,16 @@
                 "app/etc/modules/Fooman_Common.xml"
             ],
             [
+                "app/locale/de_De/Fooman_Common.csv",
+                "app/locale/de_De/Fooman_Common.csv"
+            ],
+            [
                 "app/locale/en_US/Fooman_Common.csv",
                 "app/locale/en_US/Fooman_Common.csv"
+            ],
+            [
+                "app/locale/it_IT/Fooman_Common.csv",
+                "app/locale/it_IT/Fooman_Common.csv"
             ]
         ]
     }

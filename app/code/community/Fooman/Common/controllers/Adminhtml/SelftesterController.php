@@ -22,7 +22,9 @@ class Fooman_Common_Adminhtml_SelftesterController extends Mage_Adminhtml_Contro
     {
 
         $module = $this->getRequest()->getParam('module');
-        $selftester = Mage::getModel($module . '/selftester')->main();
+        $selftester = Mage::getModel($module . '/selftester')->main(
+            $this->getRequest()->getParam('fix') == 'true'
+        );
         //Here we get db version of the given module code
         if (Mage::getModel('core/mysql4_resource')->getDbVersion($module . '_setup')) {
             $dbVersion = Mage::getModel('core/mysql4_resource')->getDbVersion($module . '_setup');

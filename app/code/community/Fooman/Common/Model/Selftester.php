@@ -19,18 +19,18 @@ class Fooman_Common_Model_Selftester extends Fooman_Common_Model_Selftester_Abst
     /**
      * Start the selftest
      *
+     * @param bool $fix
+     *
      * @return $this
      */
-    public function main ()
+    public function main ($fix = false)
     {
         $this->messages[] = 'Starting ' . get_class($this);
         $failed = false;
+        $this->_fix = $fix;
         try {
             if (!$this->selfCheckLocation()) {
                 $failed = true;
-            }
-            if (Mage::app()->getRequest()->getParam('fix') == 'true') {
-                $this->_fix = true;
             }
             if (!$this->checkFileLocations()) {
                 $failed = true;
@@ -66,15 +66,9 @@ class Fooman_Common_Model_Selftester extends Fooman_Common_Model_Selftester_Abst
      */
     public function selfCheckLocation()
     {
-        if (file_exists('app' . DIRECTORY_SEPARATOR . 'Mage.php')) {
-            require_once 'app' . DIRECTORY_SEPARATOR . 'Mage.php';
-            Mage::app();
-            $this->messages[] = "Default store loaded";
-            $this->_getVersions();
-        } else {
-            $this->messages[] = 'Can\'t instantiate Magento. Is the file uploaded to your root Magento folder?';
-            throw new Exception();
-        }
+        Mage::app();
+        $this->messages[] = "Default store loaded";
+        $this->_getVersions();
         return true;
     }
 
@@ -120,6 +114,13 @@ class Fooman_Common_Model_Selftester extends Fooman_Common_Model_Selftester_Abst
                     );
                 }
                 fclose($handleExtFile);
+
+                if (!filesize($currentRow)) {
+                    throw new Exception(
+                        'Can\'t read file contents ' . $currentRow
+                        . ' - please check if the file got corrupted in the upload process.'
+                    );
+                }
             } catch (Exception $e) {
                 $this->messages[] = $e->getMessage();
                 $returnVal = false;
