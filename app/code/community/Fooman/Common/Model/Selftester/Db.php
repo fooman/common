@@ -43,7 +43,7 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
                     $localError = $this->_dbCheckSqlTable($selftester, $field, $installer, $localError);
                     break;
                 case 'constraint':
-                    $localError = $this->_dbCheckConstraint($selftester, $field, $installer, $localError);
+                    $localError = $this->_dbCheckForeignKeyConstraint($selftester, $field, $installer, $localError);
                     break;
                 case 'row-data':
                     $localError = $this->_dbCheckDbRow($selftester, $field, $installer, $localError);
@@ -81,7 +81,6 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
         try {
             $attribute = Mage::getModel('eav/entity_attribute')->loadByCode($field[1], $field[2]);
             if (!$attribute->getId() > 0) {
-                $localError = true;
                 throw new Exception('eav attribute ' . $field[2] . ' is not installed');
             }
             $selftester->messages[] = "[OK] eav attribute " . $field[2]." with id ".$attribute->getId()."";
@@ -181,7 +180,6 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
 
                 foreach ($fields[2] as $item) {
                     $table->addColumn($item[0], $item[1], $item[2], $item[3], $item[4]);
-
                 }
                 try {
                     $selftester->messages[] = "Attempting fix for table " . $fields[1]."";
@@ -214,11 +212,11 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
      *
      * @return bool
      */
-    protected function _dbCheckConstraint(Fooman_Common_Model_Selftester $selftester, $fields, $installer, $localError)
+    protected function _dbCheckForeignKeyConstraint(Fooman_Common_Model_Selftester $selftester, $fields, $installer, $localError)
     {
         try {
-            $constraints = $installer->getConnection()->getKeyList($installer->getTable($fields[2]));
-            if (!(isset($constraints[$installer->getTable($fields[1])]))) {
+            $constraints = $installer->getConnection()->getForeignKeys($installer->getTable($fields[2]));
+            if (!(isset($constraints[$fields[1]]))) {
                 throw new Exception(
                     sprintf('Did not find constraint %s', $installer->getTable($fields[1]))
                 );

@@ -121,4 +121,14 @@ class Fooman_Common_Model_Selftester_Abstract extends Mage_Core_Model_Abstract
         return array();
     }
 
+    /**
+     * determine if cron is needed for functionality
+     *
+     * @return bool
+     */
+    public function _needsCron()
+    {
+        return false;
+    }
+
 }

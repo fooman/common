@@ -38,6 +38,9 @@ class Fooman_Common_Model_Selftester extends Fooman_Common_Model_Selftester_Abst
             if (!$this->magentoRewrites()) {
                 $failed = true;
             }
+            if (!$this->cronCheck()) {
+                $failed = true;
+            }
             if (!$this->dbCheck()) {
                 $failed = true;
             }
@@ -164,6 +167,30 @@ class Fooman_Common_Model_Selftester extends Fooman_Common_Model_Selftester_Abst
         //we don't use getModel since the common extension might not yet be installed correctly
         $dbCheckModel = new Fooman_Common_Model_Selftester_Db();
         return $dbCheckModel->dbCheck($this);
+    }
+
+    public function cronCheck()
+    {
+
+        if ($this->_needsCron()) {
+            $schedulesPending = Mage::getModel('cron/schedule')->getCollection()
+                ->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_PENDING)
+                ->addFieldToFilter('created_at', array('from' => strtotime('-1 day', time())))
+                ->load();
+            $schedulesComplete = Mage::getModel('cron/schedule')->getCollection()
+                ->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_SUCCESS)
+                ->addFieldToFilter('created_at', array('from' => strtotime('-1 day', time())))
+                ->load();
+
+            if (sizeof($schedulesPending) == 0
+                || sizeof($schedulesComplete) == 0
+            ) {
+                $this->messages[] = 'No cron job was run in the last 24 hours';
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
