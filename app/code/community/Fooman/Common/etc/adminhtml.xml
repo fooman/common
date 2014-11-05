@@ -8,29 +8,29 @@
                 </foomancommon>
             </updates>
         </layout>
-        <acl>
-            <resources>
-                <admin>
-                    <children>
-                        <foomancommon translate="title" module="foomancommon">
-                            <title>Fooman Selftests</title>
-                            <sort_order>-100</sort_order>
-                        </foomancommon>
-                        <system>
-                            <children>
-                                <config>
-                                    <children>
-                                        <foomancommon translate="title" module="foomancommon">
-                                            <title>Fooman</title>
-                                            <sort_order>50</sort_order>
-                                        </foomancommon>
-                                    </children>
-                                </config>
-                            </children>
-                        </system>
-                    </children>
-                </admin>
-            </resources>
-        </acl>
     </adminhtml>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <foomancommon translate="title" module="foomancommon">
+                        <title>Fooman Selftests</title>
+                        <sort_order>-100</sort_order>
+                    </foomancommon>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <foomancommon translate="title" module="foomancommon">
+                                        <title>Fooman</title>
+                                        <sort_order>50</sort_order>
+                                    </foomancommon>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
 </config>
