@@ -1,14 +1,5 @@
 <?xml version="1.0"?>
 <config>
-    <adminhtml>
-        <layout>
-            <updates>
-                <foomancommon>
-                    <file>fooman_common.xml</file>
-                </foomancommon>
-            </updates>
-        </layout>
-    </adminhtml>
     <acl>
         <resources>
             <admin>

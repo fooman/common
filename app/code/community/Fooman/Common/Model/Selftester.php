@@ -169,17 +169,22 @@ class Fooman_Common_Model_Selftester extends Fooman_Common_Model_Selftester_Abst
         return $dbCheckModel->dbCheck($this);
     }
 
+    /**
+     * check cron schedule table to verify cron tasks have run and are scheduled
+     *
+     * @return bool
+     */
     public function cronCheck()
     {
 
         if ($this->_needsCron()) {
             $schedulesPending = Mage::getModel('cron/schedule')->getCollection()
                 ->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_PENDING)
-                ->addFieldToFilter('created_at', array('from' => strtotime('-1 day', time())))
+                ->addFieldToFilter('created_at', array('from' => strtotime('-1 day', time()),'datetime' => true))
                 ->load();
             $schedulesComplete = Mage::getModel('cron/schedule')->getCollection()
                 ->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_SUCCESS)
-                ->addFieldToFilter('created_at', array('from' => strtotime('-1 day', time())))
+                ->addFieldToFilter('created_at', array('from' => strtotime('-1 day', time()),'datetime' => true))
                 ->load();
 
             if (sizeof($schedulesPending) == 0

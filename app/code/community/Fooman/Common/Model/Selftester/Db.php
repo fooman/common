@@ -212,13 +212,17 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
      *
      * @return bool
      */
-    protected function _dbCheckForeignKeyConstraint(Fooman_Common_Model_Selftester $selftester, $fields, $installer, $localError)
-    {
+    protected function _dbCheckForeignKeyConstraint(
+        Fooman_Common_Model_Selftester $selftester, $fields, $installer, $localError
+    ) {
         try {
             $constraints = $installer->getConnection()->getForeignKeys($installer->getTable($fields[2]));
-            if (!(isset($constraints[$installer->getTable($fields[1])]))
-                && (isset($constraints['PRIMARY'])
-                    && !in_array($fields[3], $constraints['PRIMARY']))
+            if (empty($constraints)
+                || (
+                    !(isset($constraints[$installer->getTable($fields[1])]))
+                    && (!isset($constraints['PRIMARY'])
+                    || (isset($constraints['PRIMARY']) && !in_array($fields[3], $constraints['PRIMARY'])))
+                )
             ) {
                 throw new Exception(
                     sprintf('Did not find constraint %s', $installer->getTable($fields[1]))
