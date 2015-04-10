@@ -9,7 +9,7 @@
 <config>
     <modules>
         <Fooman_Common>
-            <version>1.2.9</version>
+            <version>1.2.10</version>
         </Fooman_Common>
     </modules>
     <global>
