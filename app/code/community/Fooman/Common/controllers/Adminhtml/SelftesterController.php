@@ -14,6 +14,14 @@ class Fooman_Common_Adminhtml_SelftesterController extends Mage_Adminhtml_Contro
 {
 
     /**
+     * @return boolean
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('foomancommon');
+    }
+
+    /**
      * Here we actually run the process of selftesting. All messages are returned to the session
      *
      * @return void
