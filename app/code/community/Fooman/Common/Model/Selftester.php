@@ -204,7 +204,7 @@ class Fooman_Common_Model_Selftester extends Fooman_Common_Model_Selftester_Abst
     public function findMalformedFiles()
     {
         $ok = true;
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(BP)) as $item) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(BP), RecursiveIteratorIterator::LEAVES_ONLY, RecursiveIteratorIterator::CATCH_GET_CHILD) as $item) {
             if (pathinfo($item->getFilename(), PATHINFO_EXTENSION) == 'php') {
                 $testLoc = pathinfo($item->getPathname(), PATHINFO_DIRNAME) . DS . $item->getFilename();
                 $fileContent = file_get_contents($testLoc);
