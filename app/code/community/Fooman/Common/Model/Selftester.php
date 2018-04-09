@@ -200,31 +200,44 @@ class Fooman_Common_Model_Selftester extends Fooman_Common_Model_Selftester_Abst
 
         return true;
     }
-    
+
     public function findMalformedFiles()
     {
         $ok = true;
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(BP)) as $item) {
-            if (pathinfo($item->getFilename(), PATHINFO_EXTENSION) == 'php') {
-                $testLoc = pathinfo($item->getPathname(), PATHINFO_DIRNAME) . DS . $item->getFilename();
-                $fileContent = file_get_contents($testLoc);
-                if (0 === strncmp($fileContent, "\xEF\xBB\xBF",3)) {
-                    $this->messages[] = 'Found file with BOM: '.$testLoc;
-                    $ok = false;                
-                }
-                //if we find an opening tag in the first 10 characters we assume it was meant to start with it
-                if(false !== strpos(substr($fileContent,0,10),'<?') && 0 !== strncmp($fileContent, "<?",2)) {
-                    $this->messages[] = 'Found file with extra whitespace at the beginning: '.$testLoc;
-                    $ok = false;
-                }
-                
-                if(preg_match('/\\?'.'>\\s\\s+\\Z/m',$fileContent)) {
-                    $this->messages[] = 'Found file with extra whitespace trailing: '.$testLoc;
-                    $ok = false;
+        if ($this->_checkMalformedFiles()) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(BP)) as $item) {
+                if (pathinfo($item->getFilename(), PATHINFO_EXTENSION) == 'php') {
+                    $testLoc = pathinfo($item->getPathname(), PATHINFO_DIRNAME) . DS . $item->getFilename();
+                    $fileContent = file_get_contents($testLoc);
+                    if (0 === strncmp($fileContent, "\xEF\xBB\xBF", 3)) {
+                        $this->messages[] = 'Found file with BOM: ' . $testLoc;
+                        $ok = false;
+                    }
+                    //if we find an opening tag in the first 10 characters we assume it was meant to start with it
+                    if (false !== strpos(substr($fileContent, 0, 10), '<?') && 0 !== strncmp($fileContent, "<?", 2)) {
+                        $this->messages[] = 'Found file with extra whitespace at the beginning: ' . $testLoc;
+                        $ok = false;
+                    }
+
+                    if (preg_match('/\\?' . '>\\s\\s+\\Z/m', $fileContent)) {
+                        $this->messages[] = 'Found file with extra whitespace trailing: ' . $testLoc;
+                        $ok = false;
+                    }
                 }
             }
         }
         return $ok;
+    }
+
+    /**
+     * Should we run the check for malformed Files?
+     * Off by default
+     *
+     * @return bool
+     */
+    public function _checkMalformedFiles()
+    {
+        return false;
     }
 
     /**

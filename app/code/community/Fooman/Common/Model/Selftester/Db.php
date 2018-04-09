@@ -215,6 +215,10 @@ class Fooman_Common_Model_Selftester_Db extends Mage_Core_Model_Abstract
     protected function _dbCheckForeignKeyConstraint(
         Fooman_Common_Model_Selftester $selftester, $fields, $installer, $localError
     ) {
+        if ((string)Mage::getConfig()->getTablePrefix()) {
+            $selftester->messages[] = "[SKIP] Constraint " . $fields[1] . " due to table prefix";
+            return $localError;
+        }
         try {
             $constraints = $installer->getConnection()->getForeignKeys($installer->getTable($fields[2]));
             if (empty($constraints)
